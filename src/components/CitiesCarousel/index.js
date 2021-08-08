@@ -67,7 +67,7 @@ export default function Page() {
                 bg="gray.100"
                 border="none"
                 borderRadius="5px"
-                width={["auto", "250px"]}
+                width={["calc(100vw - 98px)", "250px"]}
                 placeholder="Pesquisar"
               />
             </InputGroup>
