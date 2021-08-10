@@ -14,7 +14,9 @@ export default function Component({ day }) {
       <Text mb="2" fontSize="0.8em">
         {day[0]}
       </Text>
-      <Text>{day[1].resumo || day[1].manha.resumo}</Text>
+      <Text lineHeight="1.2em" fontSize="0.9em">
+        {day[1].resumo || day[1].manha.resumo}
+      </Text>
       <Stack direction="row" alignItems="center">
         <Box>
           <Image

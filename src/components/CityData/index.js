@@ -91,7 +91,7 @@ export default function Component({ city, close }) {
 
       <Box textAlign="right">
         <Button size="sm" colorScheme="blue">
-          Ver cidade
+          Ver max/min
         </Button>
       </Box>
     </Box>
