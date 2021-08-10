@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -13,72 +13,67 @@ import { CloseIcon } from "@chakra-ui/icons";
 import Chart from "./Chart";
 import Day from "./Day";
 import Today from "./Today";
+import { removeCity } from "~/store/modules/cities/actions";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+export default function Component({ city, close }) {
+  const dispatch = useDispatch();
+  const remove = () => {
+    close();
+    dispatch(removeCity(city.id));
+  };
+  const [days, setDays] = useState([]);
 
-export default function Component() {
+  useEffect(() => {
+    async function getData() {
+      try {
+        const { data } = await axios.get(
+          `https://apiprevmet3.inmet.gov.br/previsao/${city.id}`
+        );
+
+        const newDays = [];
+        for (const day in data[city.id]) {
+          newDays.push([day, data[city.id][day]]);
+        }
+
+        setDays(newDays);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (city) getData();
+  }, [city]);
+
   return (
     <Box mt="5" p="5" bg="white" borderRadius="10px">
       <Flex alignItems="center" justifyContent="space-between" mb="5">
         <Heading size="md" color="gray.700">
-          New York
+          {city.name}
         </Heading>
 
-        <IconButton size="sm" variant="ghost" icon={<CloseIcon />} />
+        <Stack direction="row" spacing="1" alignItems="center">
+          <Button onClick={remove} colorScheme="red" variant="ghost" size="sm">
+            Remover cidade
+          </Button>
+          <IconButton
+            onClick={close}
+            size="sm"
+            variant="ghost"
+            icon={<CloseIcon />}
+          />
+        </Stack>
       </Flex>
 
       <Box mb="5">
-        <Today />
+        {!!days.length && <Today day={days[0]} />}
 
         <Grid gridTemplateColumns={["1fr", "1fr 1.2fr"]} mt="5" gap="10">
           <Box>
             <Text fontWeight="semibold" mb="2">
               Variação de temperatura por dia
             </Text>
-            <Chart data={data} />
+            <Chart days={days} />
           </Box>
 
           <Box>
@@ -86,12 +81,9 @@ export default function Component() {
               gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr 1fr"]}
               gap="5"
             >
-              <Day />
-              <Day />
-              <Day />
-              <Day />
-              <Day />
-              <Day />
+              {days.slice(1).map((day) => (
+                <Day day={day} />
+              ))}
             </Grid>
           </Box>
         </Grid>
