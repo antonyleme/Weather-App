@@ -102,24 +102,25 @@ export default function Page({
         </Flex>
 
         <Slider>
-          {cities
-            .filter(
-              (city) =>
-                city.name.toUpperCase().includes(searchTerm.toUpperCase()) ||
-                city.state.toUpperCase().includes(searchTerm.toUpperCase())
-            )
-            .map((city, index) => (
-              <Slide index={index} key={index}>
-                <City
-                  index={index}
-                  color={colors[index]}
-                  city={city}
-                  activeIndex={activeIndex}
-                  setActiveIndex={setActiveIndex}
-                  onOpenNewCity={onOpenNewCity}
-                />
-              </Slide>
-            ))}
+          {!!cities.length &&
+            cities
+              .filter(
+                (city) =>
+                  city.name.toUpperCase().includes(searchTerm.toUpperCase()) ||
+                  city.state.toUpperCase().includes(searchTerm.toUpperCase())
+              )
+              .map((city, index) => (
+                <Slide index={index} key={index}>
+                  <City
+                    index={index}
+                    color={colors[index]}
+                    city={city}
+                    activeIndex={activeIndex}
+                    setActiveIndex={setActiveIndex}
+                    onOpenNewCity={onOpenNewCity}
+                  />
+                </Slide>
+              ))}
           <Slide>
             <Flex
               bg="gray.200"

@@ -56,7 +56,7 @@ export default function Component({ isOpen, onClose }) {
         title: "Selecione uma cidade.",
         description: "Você se esqueceu de selecionar uma cidade..",
         status: "info",
-        duration: 9000,
+        duration: 4000,
         isClosable: true,
       });
     }

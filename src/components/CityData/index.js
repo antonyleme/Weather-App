@@ -8,11 +8,14 @@ import {
   Grid,
   IconButton,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import Chart from "./Chart";
 import Day from "./Day";
+import DaySkeleton from "./DaySkeleton";
 import Today from "./Today";
+import TodaySkeleton from "./TodaySkeleton";
 import { removeCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
 import { updateTemperatures } from "~/store/modules/temperatures/actions";
@@ -26,9 +29,12 @@ export default function Component({ city, close }) {
     dispatch(removeCity(city.id));
   };
   const [days, setDays] = useState([]);
+  const toast = useToast();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getData() {
+      setLoading(true);
       try {
         const { data } = await axios.get(
           `https://apiprevmet3.inmet.gov.br/previsao/${city.id}`
@@ -41,8 +47,15 @@ export default function Component({ city, close }) {
 
         dispatch(updateTemperatures(newDays));
         setDays(newDays);
+        setLoading(false);
       } catch (e) {
-        console.log(e);
+        toast({
+          title: "Ops.",
+          description: e.response.data.error,
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
       }
     }
     if (city) getData();
@@ -69,7 +82,7 @@ export default function Component({ city, close }) {
       </Flex>
 
       <Box mb="5">
-        {!!days.length && <Today day={days[0]} />}
+        {!loading ? <Today day={days[0]} /> : <TodaySkeleton />}
 
         <Grid gridTemplateColumns={["1fr", "1fr 1.2fr"]} mt="5" gap="10">
           <Box>
@@ -84,9 +97,9 @@ export default function Component({ city, close }) {
               gridTemplateColumns={["1fr", "1fr 1fr", "1fr 1fr 1fr"]}
               gap="5"
             >
-              {days.slice(1).map((day) => (
-                <Day day={day} />
-              ))}
+              {!loading
+                ? days.slice(1).map((day) => <Day day={day} />)
+                : Array.from({ length: 6 }).map(() => <DaySkeleton />)}
             </Grid>
           </Box>
         </Grid>
