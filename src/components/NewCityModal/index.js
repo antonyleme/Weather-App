@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Select,
   FormControl,
   FormLabel,
   useToast,
@@ -17,6 +16,8 @@ import { useState, useEffect } from "react";
 import states from "./states";
 import { addCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
+import Select from "react-select";
+import AsyncSelect from "react-select/async";
 
 export default function Component({ isOpen, onClose }) {
   const [cities, setCities] = useState([]);
@@ -30,27 +31,20 @@ export default function Component({ isOpen, onClose }) {
         `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state}/municipios`
       );
 
+      for (const city of data) {
+        city.value = city.id;
+        city.label = city.nome;
+      }
       setCities(data);
     } catch (e) {
       console.log(e);
     }
   }
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const { data } = await axios.get(
-          `https://apiprevmet3.inmet.gov.br/previsao/${city}`
-        );
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    if (city) getData();
-  }, [city]);
-
   const add = () => {
-    const newCity = cities.find((c) => c.id == city);
+    console.log(city);
+    const newCity = cities.find((c) => c.value == city);
+    console.log(newCity);
     if (!newCity) {
       return toast({
         title: "Selecione uma cidade.",
@@ -88,29 +82,20 @@ export default function Component({ isOpen, onClose }) {
         <ModalBody>
           <FormControl mb="5">
             <FormLabel>Estado</FormLabel>
-            <Select defaultValue="" onChange={(e) => getCities(e.target.value)}>
-              <option value="" disabled>
-                Selecione
-              </option>
-              {states.map((state) => (
-                <option value={state.sigla}>{state.nome}</option>
-              ))}
-            </Select>
+            <Select
+              placeholder="Selecione"
+              options={states}
+              onChange={(e) => getCities(e.value)}
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Cidade</FormLabel>
             <Select
-              defaultValue=""
-              onChange={(e) => setCity(e.target.value)}
+              placeholder="Selecione"
+              options={cities}
+              onChange={(e) => setCity(e.value)}
               disabled={!cities.length}
-            >
-              <option value="" disabled>
-                Selecione
-              </option>
-              {cities.map((city) => (
-                <option value={city.id}>{city.nome}</option>
-              ))}
-            </Select>
+            />
           </FormControl>
         </ModalBody>
 

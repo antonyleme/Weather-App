@@ -9,6 +9,7 @@ import {
   IconButton,
   Stack,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import Chart from "./Chart";
@@ -16,6 +17,7 @@ import Day from "./Day";
 import DaySkeleton from "./DaySkeleton";
 import Today from "./Today";
 import TodaySkeleton from "./TodaySkeleton";
+import ConfirmDelete from "./ConfirmDelete";
 import { removeCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
 import { updateTemperatures } from "~/store/modules/temperatures/actions";
@@ -31,6 +33,7 @@ export default function Component({ city, close }) {
   const [days, setDays] = useState([]);
   const toast = useToast();
   const [loading, setLoading] = useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     async function getData() {
@@ -50,7 +53,7 @@ export default function Component({ city, close }) {
         setLoading(false);
       } catch (e) {
         toast({
-          title: "Ops.",
+          title: "Ops",
           description: e.response.data.error,
           status: "error",
           duration: 4000,
@@ -69,9 +72,15 @@ export default function Component({ city, close }) {
         </Heading>
 
         <Stack direction="row" spacing="1" alignItems="center">
-          <Button onClick={remove} colorScheme="red" variant="ghost" size="sm">
+          <Button
+            onClick={() => onOpen()}
+            colorScheme="red"
+            variant="ghost"
+            size="sm"
+          >
             Remover cidade
           </Button>
+          <ConfirmDelete onClose={onClose} isOpen={isOpen} submit={remove} />
           <IconButton
             onClick={close}
             size="sm"
