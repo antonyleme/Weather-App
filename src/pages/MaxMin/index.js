@@ -18,7 +18,7 @@ export default function Page() {
     <Layout>
       <Flex alignItems="center" flexDir="column">
         <Heading mb="3">Temperaturas</Heading>
-        <Stack direction="row" spacing="2">
+        <Stack direction={["column", "row"]} spacing="2">
           <Flex
             alignItems="flex-end"
             justifyContent="space-between"
