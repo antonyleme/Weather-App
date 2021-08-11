@@ -15,7 +15,9 @@ import Day from "./Day";
 import Today from "./Today";
 import { removeCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
+import { updateTemperatures } from "~/store/modules/temperatures/actions";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Component({ city, close }) {
   const dispatch = useDispatch();
@@ -37,6 +39,7 @@ export default function Component({ city, close }) {
           newDays.push([day, data[city.id][day]]);
         }
 
+        dispatch(updateTemperatures(newDays));
         setDays(newDays);
       } catch (e) {
         console.log(e);
@@ -90,9 +93,11 @@ export default function Component({ city, close }) {
       </Box>
 
       <Box textAlign="right">
-        <Button size="sm" colorScheme="blue">
-          Ver max/min
-        </Button>
+        <Link to="/resume">
+          <Button size="sm" colorScheme="blue">
+            Ver max/min
+          </Button>
+        </Link>
       </Box>
     </Box>
   );

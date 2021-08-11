@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text, Stack, Image } from "@chakra-ui/react";
-import { getMax, getMin } from "./utils";
+import { getMax, getMin } from "~/utils";
 
 export default function Component({ day }) {
   return (

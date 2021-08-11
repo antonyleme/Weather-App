@@ -10,6 +10,7 @@ import {
   Select,
   FormControl,
   FormLabel,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -21,6 +22,7 @@ export default function Component({ isOpen, onClose }) {
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState("");
   const dispatch = useDispatch();
+  const toast = useToast();
 
   async function getCities(state) {
     try {
@@ -40,8 +42,6 @@ export default function Component({ isOpen, onClose }) {
         const { data } = await axios.get(
           `https://apiprevmet3.inmet.gov.br/previsao/${city}`
         );
-
-        console.log(data);
       } catch (e) {
         console.log(e);
       }
@@ -51,6 +51,15 @@ export default function Component({ isOpen, onClose }) {
 
   const add = () => {
     const newCity = cities.find((c) => c.id == city);
+    if (!newCity) {
+      return toast({
+        title: "Selecione uma cidade.",
+        description: "Você se esqueceu de selecionar uma cidade..",
+        status: "info",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
     dispatch(
       addCity({
         id: newCity.id,
@@ -58,6 +67,14 @@ export default function Component({ isOpen, onClose }) {
         state: newCity.microrregiao.mesorregiao.UF.nome,
       })
     );
+
+    toast({
+      title: "Cidade adicionada.",
+      description: "A cidade foi adicionada à lista com sucesso.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
     onClose();
   };
 

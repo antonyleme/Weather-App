@@ -1,6 +1,6 @@
-export function addTemperature(temperature) {
+export function updateTemperatures(days) {
   return {
     type: "@temperatures/UPDATE",
-    payload: { temperature },
+    payload: { days },
   };
 }

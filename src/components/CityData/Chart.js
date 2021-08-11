@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useMediaQuery } from "react-responsive";
-import { getMax, getMin } from "./utils";
+import { getMax, getMin } from "~/utils";
 
 export default function Component({ days }) {
   const isMobile = useMediaQuery({ query: "(max-device-width: 768px)" });
