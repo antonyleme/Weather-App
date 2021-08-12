@@ -12,9 +12,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import states from "./states";
-import { addCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 import CityDataService from "~/services/city.service";

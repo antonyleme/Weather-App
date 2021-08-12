@@ -18,7 +18,6 @@ import DaySkeleton from "./DaySkeleton";
 import Today from "./Today";
 import TodaySkeleton from "./TodaySkeleton";
 import ConfirmDelete from "./ConfirmDelete";
-import { removeCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
 import { updateTemperatures } from "~/store/modules/temperatures/actions";
 import axios from "axios";
