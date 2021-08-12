@@ -10,6 +10,7 @@ import {
 import { AddIcon } from "@chakra-ui/icons";
 import NewCityModal from "~/components/NewCityModal";
 import CitiesCarousel from "~/components/CitiesCarousel";
+import CitiesCarouselSkeleton from "~/components/CitiesCarousel/Skeleton";
 import CityData from "~/components/CityData";
 import Layout from "~/layout";
 import CityDataService from "~/services/city.service";
@@ -64,23 +65,22 @@ export default function Page() {
         <NewCityModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       </Flex>
 
-      {!loading && (
-        <>
-          <CitiesCarousel
-            onOpenNewCity={onOpen}
-            cities={cities}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-          />
-
-          {activeIndex !== -1 && (
-            <CityData
-              city={cities[activeIndex]}
-              close={() => setActiveIndex(-1)}
-              activeIndex={activeIndex}
-            />
-          )}
-        </>
+      {loading ? (
+        <CitiesCarouselSkeleton />
+      ) : (
+        <CitiesCarousel
+          onOpenNewCity={onOpen}
+          cities={cities}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+        />
+      )}
+      {activeIndex !== -1 && (
+        <CityData
+          city={cities[activeIndex]}
+          close={() => setActiveIndex(-1)}
+          activeIndex={activeIndex}
+        />
       )}
     </Layout>
   );

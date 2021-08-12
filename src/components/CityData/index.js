@@ -111,7 +111,7 @@ export default function Component({ city, activeIndex, close }) {
       </Flex>
 
       <Box mb="5">
-        {!loading ? (
+        {!loading && city.data ? (
           <Today day={city.data["today-temperatures"].temperatures} />
         ) : (
           <TodaySkeleton />
