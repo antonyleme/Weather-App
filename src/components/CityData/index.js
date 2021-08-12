@@ -57,24 +57,24 @@ export default function Component({ city, activeIndex, close }) {
           temperatures: data[city.data.id][moment().format("DD/MM/YYYY")],
         };
 
-        TemperatureLogDataService.create(todayTemperatures);
+        TemperatureLogDataService.create(todayTemperatures).then((res) => {});
 
-        await CityDataService.update(city.key, {
+        CityDataService.update(city.key, {
           "today-temperatures": todayTemperatures,
+        }).then(() => {
+          dispatch(updateTemperatures(newDays));
+          setDays(newDays);
+          setLoading(false);
         });
-
-        dispatch(updateTemperatures(newDays));
-        setDays(newDays);
-        setLoading(false);
       } catch (e) {
-        console.log(e);
-        toast({
-          title: "Ops",
-          description: e.response.data.error,
-          status: "error",
-          duration: 4000,
-          isClosable: true,
-        });
+        if (e.response)
+          toast({
+            title: "Ops",
+            description: e.response.data.error,
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
       }
     }
     if (city) getData();

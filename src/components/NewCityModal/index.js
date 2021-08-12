@@ -23,6 +23,7 @@ export default function Component({ isOpen, onClose }) {
   const [city, setCity] = useState("");
   const dispatch = useDispatch();
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   async function getCities(state) {
     try {
@@ -54,6 +55,7 @@ export default function Component({ isOpen, onClose }) {
     }
 
     try {
+      setLoading(true);
       await CityDataService.create(newCity);
 
       toast({
@@ -63,6 +65,8 @@ export default function Component({ isOpen, onClose }) {
         duration: 9000,
         isClosable: true,
       });
+      onClose();
+      setLoading(false);
     } catch (e) {
       return toast({
         title: "Ops",
@@ -72,8 +76,6 @@ export default function Component({ isOpen, onClose }) {
         isClosable: true,
       });
     }
-
-    onClose();
   };
 
   return (
@@ -107,7 +109,7 @@ export default function Component({ isOpen, onClose }) {
           <Button variant="ghost" mr={3}>
             Cancelar
           </Button>
-          <Button colorScheme="green" onClick={add}>
+          <Button colorScheme="green" onClick={add} isLoading={loading}>
             Adicionar
           </Button>
         </ModalFooter>
