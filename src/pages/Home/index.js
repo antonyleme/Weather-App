@@ -77,6 +77,7 @@ export default function Page() {
             <CityData
               city={cities[activeIndex]}
               close={() => setActiveIndex(-1)}
+              activeIndex={activeIndex}
             />
           )}
         </>

@@ -27,7 +27,7 @@ import CityDataService from "~/services/city.service";
 import TemperatureLogDataService from "~/services/temperature-log.service";
 import moment from "moment";
 
-export default function Component({ city, close }) {
+export default function Component({ city, activeIndex, close }) {
   const dispatch = useDispatch();
 
   const remove = () => {
@@ -57,8 +57,10 @@ export default function Component({ city, close }) {
           data: moment().format("DD/MM/YYYY"),
           temperatures: data[city.data.id][moment().format("DD/MM/YYYY")],
         };
+
         TemperatureLogDataService.create(todayTemperatures);
-        CityDataService.update(city.key, {
+
+        await CityDataService.update(city.key, {
           "today-temperatures": todayTemperatures,
         });
 
@@ -77,13 +79,17 @@ export default function Component({ city, close }) {
       }
     }
     if (city) getData();
+  }, [activeIndex]);
+
+  useEffect(() => {
+    console.log(city);
   }, [city]);
 
   return (
     <Box mt="5" p="5" bg="white" borderRadius="10px">
       <Flex alignItems="center" justifyContent="space-between" mb="5">
         <Heading size="md" color="gray.700">
-          {city.name}
+          {city.data.nome}
         </Heading>
 
         <Stack direction="row" spacing="1" alignItems="center">
@@ -106,7 +112,11 @@ export default function Component({ city, close }) {
       </Flex>
 
       <Box mb="5">
-        {!loading ? <Today day={days[0]} /> : <TodaySkeleton />}
+        {!loading ? (
+          <Today day={city.data["today-temperatures"].temperatures} />
+        ) : (
+          <TodaySkeleton />
+        )}
 
         <Grid gridTemplateColumns={["1fr", "1fr 1.2fr"]} mt="5" gap="10">
           <Box>
