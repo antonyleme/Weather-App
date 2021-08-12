@@ -38,9 +38,9 @@ export default function Component({
           <Flex flexDir="column" justifyContent="space-between">
             <Box>
               <Heading size="md" as="h2" textTransform="uppercase">
-                {city.name}
+                {city.data.nome}
               </Heading>
-              <Text>{city.state}</Text>
+              <Text>{city.data.microrregiao.mesorregiao.UF.nome}</Text>
             </Box>
 
             {/* <Box mt="2" fontSize="0.9em">

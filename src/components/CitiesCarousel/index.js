@@ -106,8 +106,12 @@ export default function Page({
             cities
               .filter(
                 (city) =>
-                  city.name.toUpperCase().includes(searchTerm.toUpperCase()) ||
-                  city.state.toUpperCase().includes(searchTerm.toUpperCase())
+                  city.data.nome
+                    .toUpperCase()
+                    .includes(searchTerm.toUpperCase()) ||
+                  city.data.microrregiao.mesorregiao.UF.nome
+                    .toUpperCase()
+                    .includes(searchTerm.toUpperCase())
               )
               .map((city, index) => (
                 <Slide index={index} key={index}>

@@ -11,15 +11,36 @@ import { AddIcon } from "@chakra-ui/icons";
 import NewCityModal from "~/components/NewCityModal";
 import CitiesCarousel from "~/components/CitiesCarousel";
 import CityData from "~/components/CityData";
-import { useSelector } from "react-redux";
 import Layout from "~/layout";
+import CityDataService from "~/services/city.service";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeIndex, setActiveIndex] = useState(-1);
-  const cities = useSelector((state) => state.cities.data);
+  //const cities = useSelector((state) => state.cities.data);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    async function getData() {
+      await CityDataService.getAll().on("value", (items) => {
+        let citiesArr = [];
+        items.forEach((item) => {
+          let key = item.key;
+          let data = item.val();
+
+          citiesArr.push({ key, data });
+        });
+        setCities(citiesArr);
+        setLoading(false);
+      });
+    }
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log(cities);
+  }, [cities]);
 
   return (
     <Layout>
@@ -43,15 +64,22 @@ export default function Page() {
         <NewCityModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       </Flex>
 
-      <CitiesCarousel
-        onOpenNewCity={onOpen}
-        cities={cities}
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
-      />
+      {!loading && (
+        <>
+          <CitiesCarousel
+            onOpenNewCity={onOpen}
+            cities={cities}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
 
-      {activeIndex !== -1 && (
-        <CityData city={cities[activeIndex]} close={() => setActiveIndex(-1)} />
+          {activeIndex !== -1 && (
+            <CityData
+              city={cities[activeIndex]}
+              close={() => setActiveIndex(-1)}
+            />
+          )}
+        </>
       )}
     </Layout>
   );

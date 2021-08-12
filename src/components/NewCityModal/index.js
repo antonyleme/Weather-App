@@ -17,7 +17,7 @@ import states from "./states";
 import { addCity } from "~/store/modules/cities/actions";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
-import AsyncSelect from "react-select/async";
+import CityDataService from "~/services/city.service";
 
 export default function Component({ isOpen, onClose }) {
   const [cities, setCities] = useState([]);
@@ -41,10 +41,9 @@ export default function Component({ isOpen, onClose }) {
     }
   }
 
-  const add = () => {
-    console.log(city);
+  const add = async () => {
     const newCity = cities.find((c) => c.value == city);
-    console.log(newCity);
+
     if (!newCity) {
       return toast({
         title: "Selecione uma cidade.",
@@ -54,21 +53,27 @@ export default function Component({ isOpen, onClose }) {
         isClosable: true,
       });
     }
-    dispatch(
-      addCity({
-        id: newCity.id,
-        name: newCity.nome,
-        state: newCity.microrregiao.mesorregiao.UF.nome,
-      })
-    );
 
-    toast({
-      title: "Cidade adicionada.",
-      description: "A cidade foi adicionada à lista com sucesso.",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
+    try {
+      await CityDataService.create(newCity);
+
+      toast({
+        title: "Cidade adicionada.",
+        description: "A cidade foi adicionada à lista com sucesso.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (e) {
+      return toast({
+        title: "Ops",
+        description: "Por algum motivo não foi possível adicionar a cidade.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+
     onClose();
   };
 

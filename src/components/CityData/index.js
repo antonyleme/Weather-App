@@ -23,13 +23,18 @@ import { useDispatch } from "react-redux";
 import { updateTemperatures } from "~/store/modules/temperatures/actions";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import CityDataService from "~/services/city.service";
+import TemperatureLogDataService from "~/services/temperature-log.service";
+import moment from "moment";
 
 export default function Component({ city, close }) {
   const dispatch = useDispatch();
+
   const remove = () => {
     close();
-    dispatch(removeCity(city.id));
+    CityDataService.delete(city.key);
   };
+
   const [days, setDays] = useState([]);
   const toast = useToast();
   const [loading, setLoading] = useState(true);
@@ -40,18 +45,28 @@ export default function Component({ city, close }) {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `https://apiprevmet3.inmet.gov.br/previsao/${city.id}`
+          `https://apiprevmet3.inmet.gov.br/previsao/${city.data.id}`
         );
 
         const newDays = [];
-        for (const day in data[city.id]) {
-          newDays.push([day, data[city.id][day]]);
+        for (const day in data[city.data.id]) {
+          newDays.push([day, data[city.data.id][day]]);
         }
+
+        const todayTemperatures = {
+          data: moment().format("DD/MM/YYYY"),
+          temperatures: data[city.data.id][moment().format("DD/MM/YYYY")],
+        };
+        TemperatureLogDataService.create(todayTemperatures);
+        CityDataService.update(city.key, {
+          "today-temperatures": todayTemperatures,
+        });
 
         dispatch(updateTemperatures(newDays));
         setDays(newDays);
         setLoading(false);
       } catch (e) {
+        console.log(e);
         toast({
           title: "Ops",
           description: e.response.data.error,
