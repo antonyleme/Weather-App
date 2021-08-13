@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -26,18 +26,6 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { useSelector } from "react-redux";
 
-// import Bg1 from "~/assets/1.jpg";
-// import Bg2 from "~/assets/2.jpg";
-// import Bg3 from "~/assets/3.jpg";
-// import Bg4 from "~/assets/4.jpg";
-// import Bg5 from "~/assets/5.jpg";
-// import Bg6 from "~/assets/6.jpg";
-// import Bg7 from "~/assets/7.jpg";
-// import Bg8 from "~/assets/8.jpg";
-// import Bg9 from "~/assets/9.jpg";
-
-// const bgs = [Bg1, Bg2, Bg3, Bg4, Bg5, Bg6, Bg7, Bg8, Bg9];
-
 const colors = [
   "green.300",
   "teal.300",
@@ -50,20 +38,20 @@ const colors = [
   "yellow.300",
 ];
 
-export default function Page({
-  onOpenNewCity,
-  cities,
-  activeIndex,
-  setActiveIndex,
-}) {
+export default function Page({ onOpenNewCity, activeIndex, setActiveIndex }) {
   const isMobile = useMediaQuery({ query: "(max-device-width: 768px)" });
   const [searchTerm, setSearchTerm] = useState("");
+  const cities = useSelector((state) => state.cities);
+
+  useEffect(() => {
+    console.log(cities);
+  }, [cities]);
 
   return (
     <Box pos="relative">
       <CarouselProvider
         naturalSlideWidth={160}
-        totalSlides={cities.length + 1}
+        totalSlides={cities.data.length + 1}
         visibleSlides={isMobile ? 1 : 4}
         isIntrinsicHeight
       >
@@ -102,8 +90,8 @@ export default function Page({
         </Flex>
 
         <Slider>
-          {!!cities.length &&
-            cities
+          {!cities.isLoading &&
+            cities.data
               .filter(
                 (city) =>
                   city.data.nome
@@ -114,7 +102,7 @@ export default function Page({
                     .includes(searchTerm.toUpperCase())
               )
               .map((city, index) => (
-                <Slide index={index} key={index}>
+                <Slide index={index} key={`city-carousel-${index}`}>
                   <City
                     index={index}
                     color={colors[index]}

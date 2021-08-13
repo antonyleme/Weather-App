@@ -25,13 +25,14 @@ import { Link } from "react-router-dom";
 import CityDataService from "~/services/city.service";
 import TemperatureLogDataService from "~/services/temperature-log.service";
 import moment from "moment";
+import citiesRef from "~/services/city.service";
 
 export default function Component({ city, activeIndex, close }) {
   const dispatch = useDispatch();
 
   const remove = () => {
     close();
-    CityDataService.delete(city.key);
+    citiesRef.child(city.key).remove();
   };
 
   const [days, setDays] = useState([]);
@@ -59,13 +60,13 @@ export default function Component({ city, activeIndex, close }) {
 
         TemperatureLogDataService.create(todayTemperatures).then((res) => {});
 
-        CityDataService.update(city.key, {
+        await citiesRef.child(city.key).update({
           "today-temperatures": todayTemperatures,
-        }).then(() => {
-          dispatch(updateTemperatures(newDays));
-          setDays(newDays);
-          setLoading(false);
         });
+
+        dispatch(updateTemperatures(newDays));
+        setDays(newDays);
+        setLoading(false);
       } catch (e) {
         if (e.response)
           toast({
@@ -79,10 +80,6 @@ export default function Component({ city, activeIndex, close }) {
     }
     if (city) getData();
   }, [activeIndex]);
-
-  useEffect(() => {
-    console.log(city);
-  }, [city]);
 
   return (
     <Box mt="5" p="5" bg="white" borderRadius="10px">
@@ -112,7 +109,10 @@ export default function Component({ city, activeIndex, close }) {
 
       <Box mb="5">
         {!loading && city.data["today-temperatures"] ? (
-          <Today day={city.data["today-temperatures"].temperatures} />
+          <Today
+            day={city.data["today-temperatures"].temperatures}
+            key={`today-temperatures-${city.key}`}
+          />
         ) : (
           <TodaySkeleton />
         )}
@@ -131,7 +131,9 @@ export default function Component({ city, activeIndex, close }) {
               gap="5"
             >
               {!loading
-                ? days.slice(1).map((day) => <Day day={day} />)
+                ? days
+                    .slice(1)
+                    .map((day) => <Day day={day} key={`day-${day}`} />)
                 : Array.from({ length: 6 }).map(() => <DaySkeleton />)}
             </Grid>
           </Box>

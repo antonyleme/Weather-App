@@ -3,7 +3,7 @@ const getMax = (day) => {
 
   let max = maxArr[0];
   for (let i = 0; i < maxArr.length; i++) {
-    if (maxArr[i] < max) max = maxArr[i];
+    if (maxArr[i] > max) max = maxArr[i];
   }
 
   return max;

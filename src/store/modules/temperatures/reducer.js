@@ -11,7 +11,10 @@ export default function temperatures(state = INITIAL_STATE, action) {
       const maxArr = [];
 
       const { days } = action.payload;
+
+      console.log(days);
       for (let i = 0; i < days.length; i++) {
+        console.log(days[i]);
         let maxTemp = {
           temperature: days[i][1].manha
             ? getMax(days[i][1])
@@ -32,6 +35,8 @@ export default function temperatures(state = INITIAL_STATE, action) {
         maxArr.push(maxTemp);
         minArr.push(minTemp);
       }
+
+      console.log(maxArr, minArr);
 
       let maxTemp = state.max;
       let minTemp = state.min;

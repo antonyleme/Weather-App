@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Box,
   Flex,
@@ -16,18 +16,6 @@ import {
   ChevronRightIcon,
   SearchIcon,
 } from "@chakra-ui/icons";
-
-const colors = [
-  "green.300",
-  "teal.300",
-  "blue.300",
-  "cyan.300",
-  "purple.300",
-  "pink.300",
-  "red.300",
-  "orange.300",
-  "yellow.300",
-];
 
 export default function Component() {
   return (

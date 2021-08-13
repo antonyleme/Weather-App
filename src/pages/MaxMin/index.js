@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Button,
-  Text,
-  Heading,
-  Image,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Flex, Button, Text, Heading, Stack } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import Layout from "~/layout";
 import { Link } from "react-router-dom";

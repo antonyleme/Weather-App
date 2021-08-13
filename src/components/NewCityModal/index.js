@@ -14,16 +14,17 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import states from "./states";
-import { useDispatch } from "react-redux";
 import Select from "react-select";
 import CityDataService from "~/services/city.service";
+import { useDispatch } from "react-redux";
+import { addCity } from "~/store/modules/cities/actions";
 
 export default function Component({ isOpen, onClose }) {
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState("");
-  const dispatch = useDispatch();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   async function getCities(state) {
     try {
@@ -56,7 +57,7 @@ export default function Component({ isOpen, onClose }) {
 
     try {
       setLoading(true);
-      await CityDataService.create(newCity);
+      dispatch(addCity(newCity));
 
       toast({
         title: "Cidade adicionada.",

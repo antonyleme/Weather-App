@@ -2,22 +2,12 @@ import firebase from "~/firebase";
 
 const db = firebase.ref("/cities");
 
-class CityDataService {
-  getAll() {
-    return db;
-  }
-
-  create(data) {
-    return db.push(data);
-  }
-
-  update(key, value) {
-    return db.child(key).update(value);
-  }
-
-  delete(key) {
-    return db.child(key).remove();
-  }
+function getAll() {
+  return db.get;
 }
 
-export default new CityDataService();
+function create(data) {
+  return db.push(data);
+}
+
+export default db;
