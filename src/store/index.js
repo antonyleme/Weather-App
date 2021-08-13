@@ -1,9 +1,6 @@
-import { createStore } from 'redux'
-import { persistStore } from 'redux-persist';
-import rootReducer from './modules/rootReducer';
-import persistReducers from './persistReducers';
+import { createStore } from "redux";
+import rootReducer from "./modules/rootReducer";
 
-let store = createStore(persistReducers(rootReducer));
-const persistor = persistStore(store);
+let store = createStore(rootReducer);
 
-export { store, persistor };
+export default store;

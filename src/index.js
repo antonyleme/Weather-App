@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
 import "pure-react-carousel/dist/react-carousel.es.css";
 import { Provider as ReduxProvider } from "react-redux";
-import { store } from "~/store";
+import store from "~/store";
 
 ReactDOM.render(
   <React.StrictMode>

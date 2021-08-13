@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container,
-  Box,
   Flex,
   Heading,
   Button,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import NewCityModal from "~/components/NewCityModal";
@@ -21,6 +20,8 @@ export default function Page() {
   //const cities = useSelector((state) => state.cities.data);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     async function getData() {
@@ -39,9 +40,22 @@ export default function Page() {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log(cities);
-  }, [cities]);
+  //   useEffect(() => {
+  //     if (cities.length) {
+  //       if (loaded) {
+  //         console.log(loaded);
+  //         return toast({
+  //           title: "Dados atualizados",
+  //           description: "Atualização realizada nos dados com sucesso.",
+  //           status: "success",
+  //           duration: 4000,
+  //           isClosable: true,
+  //         });
+  //       }
+
+  //       setLoaded(true);
+  //     }
+  //   }, [cities]);
 
   return (
     <Layout>
